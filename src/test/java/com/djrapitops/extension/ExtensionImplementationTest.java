@@ -39,7 +39,7 @@ class ExtensionImplementationTest {
 
     @BeforeEach
     void prepareExtractor() {
-        DataExtension extension = new NewExtension();
+        DataExtension extension = new BuycraftExtension(null);
         extractor = new ExtensionExtractor(extension);
     }
 
@@ -47,6 +47,11 @@ class ExtensionImplementationTest {
     @DisplayName("API is implemented correctly")
     void noImplementationErrors() {
         extractor.validateAnnotations();
+    }
+
+    @Test
+    void paymentRequestSucceeds() {
+        new ListPaymentRequest("166473e780b59e84d6a19f1975c9282bfcc7a2a7").makeRequest();
     }
 
 }

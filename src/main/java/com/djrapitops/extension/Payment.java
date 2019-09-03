@@ -22,22 +22,59 @@
 */
 package com.djrapitops.extension;
 
-import com.djrapitops.plan.extension.DataExtension;
-import com.djrapitops.plan.extension.annotation.PluginInfo;
-import com.djrapitops.plan.extension.icon.Color;
-import com.djrapitops.plan.extension.icon.Family;
+import java.util.UUID;
 
 /**
- * Template for new DataExtension.
+ * Represents a BuyCraft payment.
+ * <p>
+ * Payments are sorted most recent first by natural ordering.
  *
  * @author Rsl1122
  */
-@PluginInfo(name = "", iconName = "", iconFamily = Family.SOLID, color = Color.NONE)
-public class NewExtension implements DataExtension {
+class Payment implements Comparable<Payment> {
 
-    public NewExtension() {
-        // TODO Add required API classes
+    private final double amount;
+    private final String currency;
+    private final UUID uuid;
+    private final String playerName;
+    private final long date;
+    private final String packages;
+
+    Payment(double amount, String currency, UUID uuid, String playerName, long date, String packages) {
+        this.amount = amount;
+        this.currency = currency;
+        this.uuid = uuid;
+        this.playerName = playerName;
+        this.date = date;
+        this.packages = packages;
     }
 
-    // TODO Add Provider methods
+    public double getAmount() {
+        return amount;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public String getPlayerName() {
+        return playerName;
+    }
+
+    public long getDate() {
+        return date;
+    }
+
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public String getPackages() {
+        return packages;
+    }
+
+    @Override
+    public int compareTo(Payment o) {
+        return -Long.compare(this.date, o.date);
+    }
 }

@@ -23,6 +23,7 @@
 package com.djrapitops.extension;
 
 import com.djrapitops.plan.extension.DataExtension;
+import com.djrapitops.plan.settings.SettingsService;
 
 import java.util.Optional;
 
@@ -31,20 +32,18 @@ import java.util.Optional;
  *
  * @author Rsl1122
  */
-public class NewExtensionFactory {
+public class BuycraftExtensionFactory {
+
+    private String secret;
 
     private boolean isAvailable() {
-        try {
-            Class.forName("");
-            return true;
-        } catch (ClassNotFoundException e) {
-            return false;
-        }
+        secret = SettingsService.getInstance().getString("BuyCraft.Secret", () -> "-");
+        return !secret.equals("-") && !secret.isEmpty();
     }
 
     public Optional<DataExtension> createExtension() {
         if (isAvailable()) {
-            return Optional.of(new NewExtension());
+            return Optional.of(new BuycraftExtension(secret));
         }
         return Optional.empty();
     }
