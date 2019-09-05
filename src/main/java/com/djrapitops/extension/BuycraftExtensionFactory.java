@@ -37,7 +37,7 @@ public class BuycraftExtensionFactory {
     private String secret;
 
     private boolean isAvailable() {
-        secret = SettingsService.getInstance().getString("BuyCraft.Secret", () -> "-");
+        secret = SettingsService.getInstance().getString("Buycraft.Secret", () -> "-");
         return !secret.equals("-") && !secret.isEmpty();
     }
 
