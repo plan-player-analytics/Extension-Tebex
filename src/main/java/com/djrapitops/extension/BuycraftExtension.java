@@ -64,9 +64,10 @@ public class BuycraftExtension implements DataExtension {
     @TableProvider(tableColor = Color.BLUE)
     public Table purchaseTable() {
         Table.Factory table = Table.builder()
-                .columnOne("Date", Icon.called("calendar").of(Family.REGULAR).build())
-                .columnTwo("Amount", Icon.called("money-bill-wave").build())
-                .columnThree("Packages", Icon.called("cube").build());
+                .columnOne("Player", Icon.called("user").build())
+                .columnTwo("Date", Icon.called("calendar").of(Family.REGULAR).build())
+                .columnThree("Amount", Icon.called("money-bill-wave").build())
+                .columnFour("Packages", Icon.called("cube").build());
 
         List<Payment> payments = new ListPaymentRequest(secret).makeRequest();
         Collections.sort(payments);
