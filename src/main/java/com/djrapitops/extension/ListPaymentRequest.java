@@ -53,11 +53,11 @@ public class ListPaymentRequest {
 
     public List<Payment> makeRequest() {
         try {
-            URL url = new URL("https://plugin.buycraft.net/payments");
+            URL url = new URL("https://plugin.tebex.io/payments");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
             connection.setRequestMethod("GET");
-            connection.setRequestProperty("X-BuyCraft-Secret", secret);
+            connection.setRequestProperty("X-Tebex-Secret", secret);
 
             JsonElement json;
             try {
