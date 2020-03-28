@@ -73,7 +73,7 @@ public class ListPaymentRequest {
 
             List<Payment> payments = new ArrayList<>();
             if (json.isJsonObject()) {
-                return readError(json);
+                throw new NotReadyException();
             } else if (json.isJsonArray()) {
                 readAndAddPayments(json, payments);
             }
@@ -102,18 +102,6 @@ public class ListPaymentRequest {
             }
 
             payments.add(new Payment(amount, currency, null, playerName, date, packages.toString()));
-        }
-    }
-
-    private List<Payment> readError(JsonElement json) throws IllegalStateException {
-        JsonObject jsonObject = json.getAsJsonObject();
-        int errorCode = jsonObject.get("error_code").getAsInt();
-        String errorMessage = jsonObject.get("error_message").getAsString();
-
-        if (errorCode == 403) {
-            throw new IllegalStateException("Incorrect Server Secret. Check Plan config.");
-        } else {
-            throw new NotReadyException();
         }
     }
 }

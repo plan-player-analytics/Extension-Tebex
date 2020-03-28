@@ -6,7 +6,7 @@
 
     <groupId>com.djrapitops</groupId>
     <artifactId>Extension-Tebex</artifactId>
-    <version>R0.4</version>
+    <version>R0.5</version>
     <build>
         <plugins>
             <plugin>
