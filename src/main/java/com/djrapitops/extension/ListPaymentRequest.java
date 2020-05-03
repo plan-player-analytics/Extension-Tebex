@@ -79,7 +79,7 @@ public class ListPaymentRequest {
             }
             return payments;
         } catch (IOException e) {
-            throw new IllegalStateException("IOException occurred", e);
+            throw new NotReadyException();
         }
     }
 
