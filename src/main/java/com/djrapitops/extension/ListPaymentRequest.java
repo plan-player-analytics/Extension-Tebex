@@ -1,5 +1,5 @@
 /*
-    Copyright(c) 2019 Risto Lahtela (Rsl1122)
+    Copyright(c) 2019 Risto Lahtela (AuroraLS3)
 
     The MIT License(MIT)
 
@@ -41,7 +41,7 @@ import java.util.List;
 /**
  * Request to Buycraft API for payment listings.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class ListPaymentRequest {
 

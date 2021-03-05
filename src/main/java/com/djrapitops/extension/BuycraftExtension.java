@@ -1,5 +1,5 @@
 /*
-    Copyright(c) 2019 Risto Lahtela (Rsl1122)
+    Copyright(c) 2019 Risto Lahtela (AuroraLS3)
 
     The MIT License(MIT)
 
@@ -39,14 +39,14 @@ import java.util.List;
 /**
  * BuyCraft DataExtension.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @PluginInfo(name = "Buycraft", iconName = "shopping-bag", iconFamily = Family.SOLID, color = Color.BLUE)
 public class BuycraftExtension implements DataExtension {
 
     private final String secret;
-    private SimpleDateFormat formatter;
-    private DecimalFormat decimalFormatter;
+    private final SimpleDateFormat formatter;
+    private final DecimalFormat decimalFormatter;
 
     public BuycraftExtension(String secret) {
         this.secret = secret;
