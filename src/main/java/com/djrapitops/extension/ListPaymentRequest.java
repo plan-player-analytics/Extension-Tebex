@@ -22,24 +22,20 @@
 */
 package com.djrapitops.extension;
 
-import com.djrapitops.plan.extension.NotReadyException;
-import com.google.gson.JsonArray;
+import com.google.gson.Gson;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.ParsePosition;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
- * Request to Buycraft API for payment listings.
+ * Request to Tebex API for payment listings.
  *
  * @author AuroraLS3
  */
@@ -51,15 +47,15 @@ public class ListPaymentRequest {
         this.secret = secret;
     }
 
-    public List<Payment> makeRequest() {
+    public PaginatedPaymentsResponse requestPage(int pageNumber) {
+        JsonElement json = null;
         try {
-            URL url = new URL("https://plugin.tebex.io/payments");
+            URL url = new URL("https://plugin.tebex.io/payments?page=" + pageNumber);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
             connection.setRequestMethod("GET");
             connection.setRequestProperty("X-Tebex-Secret", secret);
 
-            JsonElement json;
             try {
                 InputStreamReader reader = new InputStreamReader(connection.getInputStream());
                 json = new JsonParser().parse(reader);
@@ -67,41 +63,25 @@ public class ListPaymentRequest {
                 connection.disconnect();
             }
 
-            if (json == null || json.isJsonNull()) {
-                throw new NullPointerException("JSON should not be null");
-            }
+            int responseCode = connection.getResponseCode();
+            if (responseCode != 200) throw new IllegalStateException("Invalid response code: " + responseCode);
 
-            List<Payment> payments = new ArrayList<>();
-            if (json.isJsonObject()) {
-                throw new NotReadyException();
-            } else if (json.isJsonArray()) {
-                readAndAddPayments(json, payments);
+            if (json.isJsonArray()) {
+                return getPaymentsWhenNotPaginated(json);
+            } else {
+                return new Gson().fromJson(json, PaginatedPaymentsResponse.class);
             }
-            return payments;
+        } catch (JsonSyntaxException e) {
+            throw new IllegalStateException("Could not parse json, " + e.getMessage() + ": " + json, e);
         } catch (IOException e) {
-            throw new NotReadyException();
+            throw new IllegalStateException("Could not request, " + e.getMessage(), e);
         }
     }
 
-    private void readAndAddPayments(JsonElement json, List<Payment> payments) {
-        JsonArray jsonArray = json.getAsJsonArray();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-
-        for (JsonElement element : jsonArray) {
-            JsonObject payment = element.getAsJsonObject();
-            double amount = payment.get("amount").getAsDouble();
-            String dateString = payment.get("date").getAsString();
-            Date dateObj = dateFormat.parse(dateString, new ParsePosition(0));
-            long date = dateObj.getTime();
-            String currency = payment.get("currency").getAsJsonObject().get("iso_4217").getAsString();
-            JsonObject player = payment.get("player").getAsJsonObject();
-            String playerName = player.get("name").getAsString();
-            StringBuilder packages = new StringBuilder();
-            for (JsonElement pack : payment.get("packages").getAsJsonArray()) {
-                packages.append(pack.getAsJsonObject().get("name")).append("<br>");
-            }
-
-            payments.add(new Payment(amount, currency, null, playerName, date, packages.toString()));
-        }
+    private PaginatedPaymentsResponse getPaymentsWhenNotPaginated(JsonElement json) {
+        TypeToken<List<PaginatedPaymentsResponse.Payment>> typeToken = new TypeToken<List<PaginatedPaymentsResponse.Payment>>() {};
+        List<PaginatedPaymentsResponse.Payment> payments = new Gson().fromJson(json, typeToken.getType());
+        int size = payments.size();
+        return new PaginatedPaymentsResponse(size, size, 1, 1, 1, size, payments);
     }
 }

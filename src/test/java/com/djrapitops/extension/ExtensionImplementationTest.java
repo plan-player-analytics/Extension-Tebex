@@ -28,6 +28,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.function.Supplier;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 /**
  * Test for the implementation of the new extension
  *
@@ -51,7 +56,19 @@ class ExtensionImplementationTest {
 
     @Test
     void paymentRequestSucceeds() {
-        new ListPaymentRequest("166473e780b59e84d6a19f1975c9282bfcc7a2a7").makeRequest();
+        PaginatedPaymentsResponse response = new ListPaymentRequest("166473e780b59e84d6a19f1975c9282bfcc7a2a7").requestPage(1);
+        Supplier<String> errorMsg = response::toString;
+        assertNotNull(response, errorMsg);
+        assertNotNull(response.getData(), errorMsg);
+        assertFalse(response.getData().isEmpty(), errorMsg);
+        for (PaginatedPaymentsResponse.Payment payment : response.getData()) {
+            assertNotNull(payment, errorMsg);
+            assertNotNull(payment.getAmount(), errorMsg);
+            assertNotNull(payment.getCurrency(), errorMsg);
+            assertNotNull(payment.getPackages(), errorMsg);
+            assertNotNull(payment.getPlayer(), errorMsg);
+            assertNotNull(payment.getPlayer().getName(), errorMsg);
+            assertNotNull(payment.getPlayer().getUUID(), errorMsg);
+        }
     }
-
 }

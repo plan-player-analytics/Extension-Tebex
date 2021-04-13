@@ -6,7 +6,7 @@
 
     <groupId>com.djrapitops</groupId>
     <artifactId>Extension-Tebex</artifactId>
-    <version>R0.6</version>
+    <version>R1.0</version>
     <build>
         <plugins>
             <plugin>
@@ -56,7 +56,7 @@
         <dependency> <!-- Plan API -->
             <groupId>com.djrapitops</groupId>
             <artifactId>plan-api</artifactId>
-            <version>5.2-R0.1</version>
+            <version>5.2-R0.5</version>
             <scope>provided</scope>
         </dependency>
 

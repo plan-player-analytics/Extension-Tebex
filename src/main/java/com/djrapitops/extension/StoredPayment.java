@@ -31,8 +31,9 @@ import java.util.UUID;
  *
  * @author AuroraLS3
  */
-class Payment implements Comparable<Payment> {
+class StoredPayment implements Comparable<StoredPayment> {
 
+    private final long tebexId;
     private final double amount;
     private final String currency;
     private final UUID uuid;
@@ -40,13 +41,30 @@ class Payment implements Comparable<Payment> {
     private final long date;
     private final String packages;
 
-    Payment(double amount, String currency, UUID uuid, String playerName, long date, String packages) {
+    StoredPayment(long tebexId, double amount, String currency, UUID uuid, String playerName, long date, String packages) {
+        this.tebexId = tebexId;
         this.amount = amount;
         this.currency = currency;
         this.uuid = uuid;
         this.playerName = playerName;
         this.date = date;
         this.packages = packages;
+    }
+
+    static StoredPayment fromResponsePayment(PaginatedPaymentsResponse.Payment payment) {
+        return new StoredPayment(
+                payment.getId(),
+                Double.parseDouble(payment.getAmount()),
+                payment.getCurrency().getIso4217(),
+                payment.getPlayer().getUUID(),
+                payment.getPlayer().getName(),
+                payment.getDate(),
+                payment.getPackages()
+        );
+    }
+
+    public long getTebexId() {
+        return tebexId;
     }
 
     public double getAmount() {
@@ -61,6 +79,10 @@ class Payment implements Comparable<Payment> {
         return playerName;
     }
 
+    public String getTruncatedPlayerName(int length) {
+        return playerName.length() > length ? playerName.substring(0, length - 1) : playerName;
+    }
+
     public long getDate() {
         return date;
     }
@@ -73,8 +95,12 @@ class Payment implements Comparable<Payment> {
         return packages;
     }
 
+    public String getTruncatedPackages(int length) {
+        return packages.length() > length ? packages.substring(0, length - 1) : packages;
+    }
+
     @Override
-    public int compareTo(Payment o) {
+    public int compareTo(StoredPayment o) {
         return -Long.compare(this.date, o.date);
     }
 }
