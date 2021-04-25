@@ -48,6 +48,8 @@ public class PaymentStorageUpdateTask implements Runnable {
             if (fetchedAllPayments) {
                 break; // No need to fetch more pages, all payments are stored.
             }
+
+            page++;
         }
         running.set(false);
     }

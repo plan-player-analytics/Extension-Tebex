@@ -2,6 +2,7 @@ package com.djrapitops.extension;
 
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -52,6 +53,7 @@ public class PaginatedPaymentsResponse {
     }
 
     public List<Payment> getData() {
+        data.sort(Comparator.comparingInt(Payment::getId).reversed());
         return data;
     }
 
