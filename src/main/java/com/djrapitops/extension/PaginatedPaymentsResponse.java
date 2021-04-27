@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class PaginatedPaymentsResponse {
 
@@ -99,7 +100,9 @@ public class PaginatedPaymentsResponse {
         }
 
         public String getPackages() {
-            String asString = packages.toString();
+            String asString = packages.stream().map(TebexPackage::getName)
+                    .sorted()
+                    .collect(Collectors.toList()).toString();
             return asString.substring(1, asString.length() - 1);
         }
 
