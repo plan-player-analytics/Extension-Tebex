@@ -33,8 +33,12 @@ public class PaymentStorageUpdateTask implements Runnable {
             maxPage = response.getLastPage();
 
             List<StoredPayment> toStore = new ArrayList<>();
-            for (PaginatedPaymentsResponse.Payment payment : response.getData()) {
-                fetchedAllPayments = payment.getId() == largestStoredId;
+            List<PaginatedPaymentsResponse.Payment> data = response.getData();
+            // Highest first
+            data.sort((one, two) -> Integer.compare(two.getId(), one.getId()));
+
+            for (PaginatedPaymentsResponse.Payment payment : data) {
+                fetchedAllPayments = payment.getId() <= largestStoredId;
                 if (fetchedAllPayments) {
                     break; // No need to process more payments
                 }
