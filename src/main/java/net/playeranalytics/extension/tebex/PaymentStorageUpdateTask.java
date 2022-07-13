@@ -1,4 +1,4 @@
-package com.djrapitops.extension;
+package net.playeranalytics.extension.tebex;
 
 import java.util.ArrayList;
 import java.util.List;

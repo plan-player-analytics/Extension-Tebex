@@ -1,4 +1,4 @@
-package com.djrapitops.extension;
+package net.playeranalytics.extension.tebex;
 
 import com.djrapitops.plan.query.QueryService;
 
