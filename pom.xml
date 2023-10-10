@@ -6,7 +6,7 @@
 
     <groupId>net.playeranalytics</groupId>
     <artifactId>Extension-Tebex</artifactId>
-    <version>R2.3</version>
+    <version>R2.4</version>
     <build>
         <plugins>
             <plugin>
@@ -46,17 +46,16 @@
         <!--<url>https://repo.velocitypowered.com/snapshots/</url>-->
         <!--</repository>-->
         <repository>
-            <id>plan-repo</id>
-            <url>https://repo.playeranalytics.net/releases</url>
+            <id>jitpack</id>
+            <url>https://jitpack.io</url>
         </repository>
-
     </repositories>
 
     <dependencies>
-        <dependency> <!-- Plan API -->
-            <groupId>com.djrapitops</groupId>
-            <artifactId>plan-api</artifactId>
-            <version>5.2-R0.9</version>
+        <dependency>
+            <groupId>com.github.plan-player-analytics</groupId>
+            <artifactId>Plan</artifactId>
+            <version>5.6.2574</version>
             <scope>provided</scope>
         </dependency>
 

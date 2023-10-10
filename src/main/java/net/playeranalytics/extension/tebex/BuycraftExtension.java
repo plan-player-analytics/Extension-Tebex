@@ -30,10 +30,10 @@ import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Family;
 import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.table.Table;
+import com.djrapitops.plan.extension.table.TableColumnFormat;
 import com.djrapitops.plan.settings.SchedulerService;
 
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -46,7 +46,6 @@ import java.util.UUID;
 @PluginInfo(name = "Buycraft", iconName = "shopping-bag", iconFamily = Family.SOLID, color = Color.BLUE)
 public class BuycraftExtension implements DataExtension {
 
-    private SimpleDateFormat formatter;
     private DecimalFormat decimalFormatter;
     private PaymentStorage storage;
     private PaymentStorageUpdateTask updateTask;
@@ -56,7 +55,6 @@ public class BuycraftExtension implements DataExtension {
             storage = new PaymentStorage();
             updateTask = new PaymentStorageUpdateTask(storage, secret);
 
-            formatter = new SimpleDateFormat("MMM d yyyy, HH:mm");
             decimalFormatter = new DecimalFormat("#0.00");
 
             SchedulerService.getInstance().runAsync(updateTask);
@@ -77,7 +75,9 @@ public class BuycraftExtension implements DataExtension {
 
         Table.Factory table = Table.builder()
                 .columnOne("Player", Icon.called("user").build())
+                .columnOneFormat(TableColumnFormat.PLAYER_NAME)
                 .columnTwo("Date", Icon.called("calendar").of(Family.REGULAR).build())
+                .columnTwoFormat(TableColumnFormat.DATE_YEAR)
                 .columnThree("Amount", Icon.called("money-bill-wave").build())
                 .columnFour("Packages", Icon.called("cube").build());
 
@@ -88,7 +88,7 @@ public class BuycraftExtension implements DataExtension {
             String name = payment.getPlayerName();
             table.addRow(
                     name,
-                    formatter.format(payment.getDate()),
+                    payment.getDate(),
                     decimalFormatter.format(payment.getAmount()) + " " + payment.getCurrency(),
                     payment.getPackages()
             );
@@ -101,6 +101,7 @@ public class BuycraftExtension implements DataExtension {
     public Table playerPurchaseTable(UUID playerUUID) {
         Table.Factory table = Table.builder()
                 .columnOne("Date", Icon.called("calendar").of(Family.REGULAR).build())
+                .columnOneFormat(TableColumnFormat.DATE_YEAR)
                 .columnTwo("Amount", Icon.called("money-bill-wave").build())
                 .columnThree("Packages", Icon.called("cube").build());
 
@@ -109,7 +110,7 @@ public class BuycraftExtension implements DataExtension {
 
         for (StoredPayment payment : payments) {
             table.addRow(
-                    formatter.format(payment.getDate()),
+                    payment.getDate(),
                     decimalFormatter.format(payment.getAmount()) + " " + payment.getCurrency(),
                     payment.getPackages()
             );
