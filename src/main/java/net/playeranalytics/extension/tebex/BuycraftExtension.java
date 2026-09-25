@@ -24,8 +24,13 @@ package net.playeranalytics.extension.tebex;
 
 import com.djrapitops.plan.extension.CallEvents;
 import com.djrapitops.plan.extension.DataExtension;
+import com.djrapitops.plan.extension.annotation.GraphProvider;
 import com.djrapitops.plan.extension.annotation.PluginInfo;
 import com.djrapitops.plan.extension.annotation.TableProvider;
+import com.djrapitops.plan.extension.graph.DataPoint;
+import com.djrapitops.plan.extension.graph.HistoryStrategy;
+import com.djrapitops.plan.extension.graph.SeriesMetadata;
+import com.djrapitops.plan.extension.graph.ServerGraphDataSource;
 import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Family;
 import com.djrapitops.plan.extension.icon.Icon;
@@ -36,7 +41,9 @@ import com.djrapitops.plan.settings.SchedulerService;
 import java.text.DecimalFormat;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  * BuyCraft DataExtension.
@@ -117,5 +124,29 @@ public class BuycraftExtension implements DataExtension {
         }
 
         return table.build();
+    }
+
+    @GraphProvider(
+            displayName = "Payment history (cumulative)",
+            strategy = HistoryStrategy.ONLY_APPEND_MISSING,
+            sampleIntervalUnit = TimeUnit.DAYS // No point sampling empty point too often
+    )
+    public ServerGraphDataSource paymentHistory() {
+        return new ServerGraphDataSource() {
+            @Override
+            public Optional<DataPoint> getPoint(long currentTimestamp) {
+                return Optional.empty();
+            }
+
+            @Override
+            public List<DataPoint> getPointHistory(long currentTimestamp) {
+                return storage.fetchPaymentsAsCumulativeDataPoints();
+            }
+
+            @Override
+            public List<SeriesMetadata> getSeriesMetadata() {
+                return storage.fetchPaymentsMetadata();
+            }
+        };
     }
 }

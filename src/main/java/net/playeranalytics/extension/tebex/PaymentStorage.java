@@ -1,12 +1,14 @@
 package net.playeranalytics.extension.tebex;
 
+import com.djrapitops.plan.extension.FormatType;
+import com.djrapitops.plan.extension.graph.DataPoint;
+import com.djrapitops.plan.extension.graph.SeriesMetadata;
 import com.djrapitops.plan.query.QueryService;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class PaymentStorage {
 
@@ -54,7 +56,7 @@ public class PaymentStorage {
         });
     }
 
-    public void storePayments(List<StoredPayment> toStore) {
+    void storePayments(List<StoredPayment> toStore) {
         String insertStatement = "INSERT INTO plan_tebex_payments " +
                 "(tebex_id, player_name, uuid, date, amount, currency_iso_4217, packages)" +
                 "VALUES " +
@@ -75,7 +77,7 @@ public class PaymentStorage {
         });
     }
 
-    public List<StoredPayment> fetchPayments() {
+    List<StoredPayment> fetchPayments() {
         String sql = "SELECT * FROM plan_tebex_payments";
         return queryService.query(sql, statement -> {
             try (ResultSet set = statement.executeQuery()) {
@@ -96,7 +98,7 @@ public class PaymentStorage {
         });
     }
 
-    public List<StoredPayment> fetchPayments(UUID playerUUID) {
+    List<StoredPayment> fetchPayments(UUID playerUUID) {
         String sql = "SELECT * FROM plan_tebex_payments WHERE uuid=?";
         return queryService.query(sql, statement -> {
             statement.setString(1, playerUUID.toString());
@@ -117,5 +119,36 @@ public class PaymentStorage {
                 return payments;
             }
         });
+    }
+
+    public List<SeriesMetadata> fetchPaymentsMetadata() {
+        String sql = "SELECT MIN(id) as id, MIN(date) as date, currency_iso_4217 FROM plan_tebex_payments " +
+                "GROUP BY currency_iso_4217 " +
+                "ORDER BY date ASC, id ASC";
+        return queryService.query(sql, statement -> {
+            try (ResultSet set = statement.executeQuery()) {
+                List<SeriesMetadata> series = new ArrayList<>();
+                while (set.next()) {
+                    String currency = set.getString("currency_iso_4217");
+                    series.add(new SeriesMetadata(currency, currency, FormatType.NONE, null));
+                }
+                return series;
+            }
+        });
+    }
+
+    public List<DataPoint> fetchPaymentsAsCumulativeDataPoints() {
+        List<SeriesMetadata> metadata = fetchPaymentsMetadata(); // Metadata used for index consistency
+        List<StoredPayment> payments = fetchPayments();
+
+        Map<String, Double> accumulator = new HashMap<>();
+        List<DataPoint> points = new ArrayList<>();
+        for (StoredPayment payment : payments) {
+            accumulator.compute(payment.getCurrency(), (key, currentValue) -> currentValue == null ? payment.getAmount() : currentValue + payment.getAmount());
+            points.add(new DataPoint(payment.getDate(), metadata.stream()
+                    .map(k -> accumulator.getOrDefault(k.getSeriesName(), 0.0))
+                    .collect(Collectors.toList())));
+        }
+        return points;
     }
 }

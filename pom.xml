@@ -6,7 +6,7 @@
 
     <groupId>net.playeranalytics</groupId>
     <artifactId>Extension-Tebex</artifactId>
-    <version>R2.4</version>
+    <version>R3.0</version>
     <build>
         <plugins>
             <plugin>
@@ -29,22 +29,10 @@
     <repositories>
         <!-- Platforms -->
 
-        <!--<repository>-->
-        <!--<id>spigot-repo</id>-->
-        <!--<url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>-->
-        <!--</repository>-->
-        <!--<repository>-->
-        <!--<id>sponge-repo</id>-->
-        <!--<url>https://repo.spongepowered.org/maven</url>-->
-        <!--</repository>-->
-        <!--<repository>-->
-        <!--<id>bungeecord-repo</id>-->
-        <!--<url>https://oss.sonatype.org/content/repositories/snapshots</url>-->
-        <!--</repository>-->
-        <!--<repository>-->
-        <!--<id>velocity-repo</id>-->
-        <!--<url>https://repo.velocitypowered.com/snapshots/</url>-->
-        <!--</repository>-->
+        <repository>
+            <id>plan-repo</id>
+            <url>https://repo.playeranalytics.net/releases</url>
+        </repository>
         <repository>
             <id>jitpack</id>
             <url>https://jitpack.io</url>
@@ -52,12 +40,18 @@
     </repositories>
 
     <dependencies>
-        <dependency>
-            <groupId>com.github.plan-player-analytics</groupId>
-            <artifactId>Plan</artifactId>
-            <version>5.6.2574</version>
+        <dependency> <!-- Plan API -->
+            <groupId>com.djrapitops</groupId>
+            <artifactId>plan-api</artifactId>
+            <version>5.9-R0.1</version>
             <scope>provided</scope>
         </dependency>
+        <!--        <dependency>-->
+        <!--            <groupId>com.github.plan-player-analytics</groupId>-->
+        <!--            <artifactId>Plan</artifactId>-->
+        <!--            <version>5.6.2574</version>-->
+        <!--            <scope>provided</scope>-->
+        <!--        </dependency>-->
 
         <!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
         <dependency>
@@ -66,42 +60,6 @@
             <version>2.9.0</version>
             <scope>provided</scope>
         </dependency>
-
-
-        <!-- Plugin API Dependency -->
-        <!--<dependency>-->
-        <!--<groupId></groupId>-->
-        <!--<artifactId></artifactId>-->
-        <!--<version></version>-->
-        <!--<scope>provided</scope>-->
-        <!--</dependency>-->
-
-        <!-- Platforms -->
-
-        <!--<dependency>-->
-        <!--<groupId>org.spigotmc</groupId>-->
-        <!--<artifactId>spigot-api</artifactId>-->
-        <!--<version>1.12.2-R0.1-SNAPSHOT</version>-->
-        <!--<scope>provided</scope>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-        <!--<groupId>org.spongepowered</groupId>-->
-        <!--<artifactId>spongeapi</artifactId>-->
-        <!--<version>7.1.0</version>-->
-        <!--<scope>provided</scope>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-        <!--<groupId>net.md-5</groupId>-->
-        <!--<artifactId>bungeecord-api</artifactId>-->
-        <!--<version>1.12-SNAPSHOT</version>-->
-        <!--<scope>provided</scope>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-        <!--<groupId>com.velocitypowered</groupId>-->
-        <!--<artifactId>velocity-api</artifactId>-->
-        <!--<version>1.0-SNAPSHOT</version>-->
-        <!--<scope>provided</scope>-->
-        <!--</dependency>-->
 
         <!-- Test Dependencies -->
         <dependency>
