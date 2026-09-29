@@ -1,7 +1,7 @@
 package net.playeranalytics.extension.tebex;
 
-import com.djrapitops.plan.extension.FormatType;
 import com.djrapitops.plan.extension.graph.DataPoint;
+import com.djrapitops.plan.extension.graph.GraphFormatType;
 import com.djrapitops.plan.extension.graph.SeriesMetadata;
 import com.djrapitops.plan.query.QueryService;
 
@@ -130,7 +130,7 @@ public class PaymentStorage {
                 List<SeriesMetadata> series = new ArrayList<>();
                 while (set.next()) {
                     String currency = set.getString("currency_iso_4217");
-                    series.add(new SeriesMetadata(currency, currency, FormatType.NONE, null));
+                    series.add(new SeriesMetadata(currency, currency, GraphFormatType.NONE, null));
                 }
                 return series;
             }
