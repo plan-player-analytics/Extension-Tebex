@@ -78,7 +78,7 @@ public class PaymentStorage {
     }
 
     List<StoredPayment> fetchPayments() {
-        String sql = "SELECT * FROM plan_tebex_payments";
+        String sql = "SELECT * FROM plan_tebex_payments ORDER BY date DESC";
         return queryService.query(sql, statement -> {
             try (ResultSet set = statement.executeQuery()) {
                 List<StoredPayment> payments = new ArrayList<>();
@@ -140,6 +140,7 @@ public class PaymentStorage {
     public List<DataPoint> fetchPaymentsAsCumulativeDataPoints() {
         List<SeriesMetadata> metadata = fetchPaymentsMetadata(); // Metadata used for index consistency
         List<StoredPayment> payments = fetchPayments();
+        Collections.reverse(payments);
 
         Map<String, Double> accumulator = new HashMap<>();
         List<DataPoint> points = new ArrayList<>();

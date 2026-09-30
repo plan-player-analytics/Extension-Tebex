@@ -6,7 +6,7 @@
 
     <groupId>net.playeranalytics</groupId>
     <artifactId>Extension-Tebex</artifactId>
-    <version>R3.1</version>
+    <version>R3.2</version>
     <build>
         <plugins>
             <plugin>
